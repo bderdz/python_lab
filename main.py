@@ -3,6 +3,22 @@ from math import sin, cos, radians
 GRAVITY = 9.81
 DISTANCE = 100
 IMPACT_RADIUS = 5
+ROWS = 6
+COLS = 10
+
+
+def draw_scene(x, y):
+    for _ in range(y - 1):
+        print()
+    for _ in range(x - 1):
+        print(" ", end="")
+        
+    print("o")
+
+    for _ in range(y, ROWS - 1):
+        print()
+    for _ in range(COLS):
+        print("_", end="")
 
 
 def get_input():
@@ -49,5 +65,7 @@ def main():
     print(f"Zwyciężył gracz: {player}")
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
+
+draw_scene(2, 3)
