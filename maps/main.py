@@ -3,8 +3,26 @@ import curses
 PANEL_HEIGHT = 10
 
 
-def add_structure(structures, y, x):
-    structures.append((y, x))
+def load_structure_from_file(src):
+    with open(src) as file:
+        lines = file.read()
+        lines = lines.splitlines()
+
+        return lines[0], lines[1:]
+
+
+def draw_structure(stdscr, structure):
+    name, art = structure
+
+    for i, line in enumerate(art):
+        stdscr.addstr(i, 0, line)
+
+
+def add_structure(structures, y, x, height):
+    y_max = height - PANEL_HEIGHT - 1
+
+    if y < y_max:
+        structures.append((y, x))
 
 
 def show_title_screen(stdscr, height, width):
@@ -14,6 +32,9 @@ def show_title_screen(stdscr, height, width):
     for i, content in enumerate(contents):
         offset_x = (width - len(content)) // 2
         stdscr.addstr(offset_y + i, offset_x, content)
+
+    barracks = load_structure_from_file("structures/barracks.txt")
+    draw_structure(stdscr, barracks)
 
     stdscr.getch()
 
@@ -45,7 +66,7 @@ def main(stdscr):
     stdscr.clear()
     show_title_screen(stdscr, height, width)
     draw_scene(stdscr, structures, height, width)
-    
+
     while (True):
         ch = stdscr.getch()
 
@@ -53,7 +74,7 @@ def main(stdscr):
             _, x, y, _, bstate = curses.getmouse()
 
             if bstate & curses.BUTTON1_CLICKED:
-                add_structure(structures, y, x)
+                add_structure(structures, y, x, height)
                 draw_scene(stdscr, structures, height, width)
 
 
