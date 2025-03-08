@@ -34,6 +34,9 @@ def add_structure(structures, y, x, height):
         structures.append((y, x))
 
 
+g
+
+
 def show_title_screen(stdscr, height, width):
     contents = ["Map maker", "version 1.0", "", "Naciśnij dowolny klawisz aby kontynuować"]
     offset_y = (height - len(contents)) // 2
@@ -47,7 +50,7 @@ def show_title_screen(stdscr, height, width):
 
 def draw_map(stdscr, structures):
     global barracks
-    
+
     for y, x in structures:
         draw_structure(stdscr, barracks, x, y, centered=True)
 
