@@ -1,5 +1,8 @@
 import curses
 import os
+import datetime
+import pickle
+import sys
 
 
 def load_structure_from_directory(path):
@@ -49,6 +52,20 @@ def draw_scene(stdscr, structures, active_structure, available_structures, heigh
     stdscr.refresh()
 
 
+def save_map(structures):
+    time_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"map_{time_stamp}.bin"
+    with open(filename, 'wb') as file:
+        pickle.dump(structures, file)
+
+
+def load_map(file_path):
+    file = open(file_path, 'rb')
+    structures = pickle.load(file)
+    file.close()
+    return structures
+
+
 def show_title_screen(stdscr, height, width):
     contents = ["Map maker", "version 1.0", "", "Naciśnij dowolny klawisz aby kontynuować"]
     y = (height - len(contents)) // 2
@@ -67,7 +84,12 @@ def main(stdscr):
     curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.curs_set(0)
     curses.mousemask(curses.ALL_MOUSE_EVENTS | curses.REPORT_MOUSE_POSITION)
-    structures = []
+
+    if len(sys.argv) == 2:
+        structures = load_map(sys.argv[1])
+    else:
+        structures = []
+
     height, width = stdscr.getmaxyx()
     stdscr.clear()
     show_title_screen(stdscr, height, width)
@@ -76,6 +98,8 @@ def main(stdscr):
         ch = stdscr.getch()
         if ch == ord('q'):
             break
+        elif ch == ord('s'):
+            save_map(structures)
         elif ch in list(range(ord('1'), ord('4') + 1)):
             active_structure = ch - ord('1')
         elif ch == curses.KEY_MOUSE:
