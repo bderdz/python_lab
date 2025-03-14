@@ -40,14 +40,14 @@ def add_structure(structures, y, x, height, available_structures, active_structu
     structures.append((y, x, list(available_structures.keys())[active_structure]))
 
 
-def draw_map(stdscr, structures, available_structures):
+def draw_map(stdscr, structures, available_structures, offset_x, offset_y):
     for y, x, name in structures:
-        draw_structure(stdscr, available_structures[name], x, y, centered=True)
+        draw_structure(stdscr, available_structures[name], x - offset_x, y - offset_y, centered=True)
 
 
-def draw_scene(stdscr, structures, active_structure, available_structures, height, width):
+def draw_scene(stdscr, structures, active_structure, available_structures, height, width, offset_x, offset_y):
     stdscr.clear()
-    draw_map(stdscr, structures, available_structures)
+    draw_map(stdscr, structures, available_structures, offset_x, offset_y)
     stdscr.addstr(height - 1, 0, list(available_structures.keys())[active_structure])
     stdscr.refresh()
 
@@ -79,6 +79,8 @@ def show_title_screen(stdscr, height, width):
 def main(stdscr):
     available_structures = load_structure_from_directory('structures')
     active_structure = 0
+    offset_x = 0
+    offset_y = 0
 
     curses.start_color()
     curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLACK)
@@ -94,7 +96,8 @@ def main(stdscr):
     stdscr.clear()
     show_title_screen(stdscr, height, width)
     while True:
-        draw_scene(stdscr, structures, active_structure, available_structures, height, width)
+        draw_scene(stdscr, structures, active_structure, available_structures, height, width, offset_x, offset_y)
+
         ch = stdscr.getch()
         if ch == ord('q'):
             break
@@ -105,7 +108,15 @@ def main(stdscr):
         elif ch == curses.KEY_MOUSE:
             _, x, y, _, bstate = curses.getmouse()
             if bstate & curses.BUTTON1_CLICKED:
-                add_structure(structures, y, x, height, available_structures, active_structure)
+                add_structure(structures, y + offset_y, x + offset_x, height, available_structures, active_structure)
+        elif ch == curses.KEY_LEFT:
+            offset_x -= 1
+        elif ch == curses.KEY_RIGHT:
+            offset_x += 1
+        elif ch == curses.KEY_UP:
+            offset_y -= 1
+        elif ch == curses.KEY_DOWN:
+            offset_y += 1
 
 
 if __name__ == '__main__':
