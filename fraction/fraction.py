@@ -17,6 +17,16 @@ class Fraction:
         self.numerator //= gcd_value
         self.denominator //= gcd_value
 
+    def __mul__(self, other):
+        num = self.numerator * other.numerator
+        den = self.denominator * other.denominator
+        return Fraction(num, den)
+
+    def __imul__(self, other):
+        self.numerator *= other.numerator
+        self.denominator *= other.denominator
+        return self
+
     def __float__(self):
         return float(self.numerator / self.denominator)
 
