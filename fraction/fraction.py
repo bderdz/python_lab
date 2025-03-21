@@ -3,6 +3,9 @@ from math import gcd
 
 class Fraction:
     def __init__(self, numerator, denominator):
+        if denominator == 0:
+            raise ValueError("The denominator is 0")
+        
         self.numerator = numerator
         self.denominator = denominator
 
@@ -38,6 +41,9 @@ class Fraction:
         return self.__mul__(other)
 
     def __truediv__(self, other):
+        if other.numerator == 0:
+            raise ZeroDivisionError("The numerator is 0")
+
         return self.__mul__(Fraction(other.denominator, other.numerator))
 
     def __float__(self):
