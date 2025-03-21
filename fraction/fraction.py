@@ -18,17 +18,27 @@ class Fraction:
         self.denominator //= gcd_value
 
     def __mul__(self, other):
-        if not isinstance(other, Fraction):
+        if isinstance(other, Fraction):
+            nom = self.numerator * other.numerator
+            den = self.denominator * other.denominator
+            return Fraction(nom, den)
+        elif isinstance(other, int):
+            nom = self.numerator * other
+            dem = self.denominator
+            return Fraction(nom, dem)
+        else:
             return NotImplemented
-
-        num = self.numerator * other.numerator
-        den = self.denominator * other.denominator
-        return Fraction(num, den)
 
     def __imul__(self, other: "Fraction"):
         self.numerator *= other.numerator
         self.denominator *= other.denominator
         return self
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __truediv__(self, other):
+        return self.__mul__(Fraction(other.denominator, other.numerator))
 
     def __float__(self):
         return float(self.numerator / self.denominator)
