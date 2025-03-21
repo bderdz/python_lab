@@ -5,7 +5,7 @@ class Fraction:
     def __init__(self, numerator, denominator):
         if denominator == 0:
             raise ValueError("The denominator is 0")
-        
+
         self.numerator = numerator
         self.denominator = denominator
 
@@ -31,6 +31,17 @@ class Fraction:
             return Fraction(nom, dem)
         else:
             return NotImplemented
+
+    def __common(self, other, operator):
+        nom = operator(self.numerator * other.denominator, other.numerator * self.denominator)
+        dem = self.denominator * other.denominator
+        return Fraction(nom, dem)
+
+    def __add__(self, other):
+        return self.__common(other, lambda x, y: x + y)
+
+    def __sub__(self, other):
+        return self.__common(other, lambda x, y: x - y)
 
     def __imul__(self, other: "Fraction"):
         self.numerator *= other.numerator
