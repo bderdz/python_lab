@@ -1,101 +1,25 @@
-from math import sin, cos, radians
-from time import sleep
-import os
-from shutil import get_terminal_size
+class Fraction:
+    numerator = None
+    denominator = None
 
-GRAVITY = 9.81
-DISTANCE = 100
-IMPACT_RADIUS = 5
-COLS, ROWS = get_terminal_size()
-
-ASPECT_RATIO = COLS / DISTANCE
-
-
-def draw_scene(x, y):
-    for _ in range(y - 2):
-        print()
-
-    if 0 <= x < COLS and 0 <= y < ROWS:
-        for _ in range(x - 1):
-            print(" ", end="")
-        print("o")
-    else:
-        print()
-
-    for _ in range(y, ROWS - 1):
-        print()
-
-    print("(@)" + "-" * (COLS - 6) + "(#)")
-
-
-def draw_scene_adjusted(x, y):
-    x_t = x * ASPECT_RATIO
-    y_t = ROWS - (y * ASPECT_RATIO / 2)
-
-    draw_scene(round(x_t), round(y_t))
-
-
-def animate_shot(velocity, angle, player):
-    t_c = 2 * velocity * sin(angle) / GRAVITY
-    d_t = 0.016
-    v_x = velocity * cos(angle) * (-1 if player == 2 else 1)
-    v_y = velocity * sin(angle)
-
-    t = 0
-
-    while t < t_c:
-        x = v_x * t + (COLS if player == 2 else 0)
-        y = v_y * t - GRAVITY * t ** 2 / 2
-
-        os.system("clear")
-        draw_scene_adjusted(x, y)
-
-        t += d_t
-        sleep(d_t)
-
-
-def get_input():
-    angle = None
-
-    while angle is None or not (angle >= 0 and angle <= 90):
-        angle = float(input("Podaj kąt: "))
-
-    velocity = float(input("Podaj prędkość: "))
-    angle = radians(angle)
-
-    return angle, velocity
-
-
-def calculate_impact(angle, velocity):
-    return (velocity ** 2 * sin(2 * angle)) / GRAVITY
-
-
-def check_victory(distance, z):
-    return abs(distance - z) < IMPACT_RADIUS
+    def is_integer(self):
+        return self.numerator % self.denominator == 0
 
 
 def main():
-    player = 1
+    fraction = Fraction()
+    fraction.numerator = 1
+    fraction.denominator = 2
 
-    while True:
-        print(f"\ntura gracza {player}")
-        angle, velocity = get_input()
-        z = calculate_impact(angle, velocity)
+    fraction2 = Fraction()
+    fraction2.numerator = 4
+    fraction2.denominator = 4
 
-        animate_shot(velocity, angle, player)
+    print(f"{fraction.numerator}/{fraction.denominator}")
+    print(f"{fraction2.numerator}/{fraction2.denominator}")
 
-        if player == 1:
-            if (check_victory(DISTANCE, z)):
-                break
-        else:
-            z = DISTANCE - z
-
-            if (check_victory(0, z)):
-                break
-
-        player = 3 - player
-
-    print(f"Zwyciężył gracz: {player}")
+    print(f"1 - {fraction.is_integer()}")
+    print(f"2 - {fraction2.is_integer()}")
 
 
 if __name__ == '__main__':
