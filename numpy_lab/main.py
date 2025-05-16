@@ -1,21 +1,23 @@
+import math
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 SIZE = (100, 100)
-IMSHOW_ARGS = {'cmap': 'gray', 'vmin': 0, 'vmax': 255}
+IMSHOW_ARGS = {"vmin": 0, "vmax": 255, "cmap": 'gray'}
 
 
 def ex1():
-    array_1d = np.array([1, 2, 3, 4, 5], dtype=np.uint32)
-    array_2d = np.array([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]])
+    array_1d = np.array([1, 2, 3, 4, 5], dtype=np.uint8)
+    array_2d = np.array([[1, 2, 3], [4, 5, 6]])
 
-    print(f'array_1d:\n {array_1d}\n shape: {array_1d.shape}\n dtype: {array_1d.dtype}\n')
-    print(f'array_2d:\n {array_2d}\n shape: {array_2d.shape}\n dtype: {array_2d.dtype}\n')
+    print(f'array_1d: {array_1d}, shape: {array_1d.shape}, dtype: {array_1d.dtype}')
+    print(f'array_2d: {array_2d}, shape: {array_2d.shape}, dtype: {array_2d.dtype}')
 
 
 def ex2():
-    img = np.zeros((100, 100), dtype=np.uint8)
-    img[50, 50] = 255
+    img = np.zeros(SIZE, dtype=np.uint8)
+    img[35, 77] = 255
     plt.imshow(img, cmap='gray')
     plt.show()
 
@@ -27,15 +29,13 @@ def ex3():
 
 
 def ex4(show=False):
-    img_uniform = np.random.randint(0, 256, size=SIZE, dtype=np.uint8)
     img_normal = np.random.normal(loc=127, scale=1, size=SIZE)
-
+    img_uniform = np.random.randint(0, 256, size=SIZE, dtype=np.uint8)
     if show:
-        _, (ax1, ax2) = plt.subplots(1, 2)
-        ax1.imshow(img_uniform, cmap='gray')
-        ax2.imshow(img_normal, cmap='gray')
+        _, (ax_normal, ax_uniform) = plt.subplots(1, 2)
+        ax_normal.imshow(img_normal)
+        ax_uniform.imshow(img_uniform)
         plt.show()
-
     return img_uniform, img_normal
 
 
@@ -66,14 +66,51 @@ def ex9():
     return img
 
 
+def ex10():
+    freq = 5
+    x = np.linspace(0, math.pi * 2 * freq, 100)
+    y = np.sin(x)
+    plt.figure()
+    plt.plot(x, y)
+    plt.show()
+
+
+def ex11():
+    freq = 5
+    x = np.linspace(0, np.pi * 2 * freq, 100)
+    xx, yy = np.meshgrid(x, x)
+    xx = np.sin(xx)
+    return xx
+
+
+def ex12():
+    freq = 5
+    x = np.linspace(0, np.pi * 2 * freq, 100)
+    xx, yy = np.meshgrid(x, x)
+    yy = np.sin(yy)
+    return yy
+
+
+def ex13():
+    freq = 5
+    x = np.linspace(0, np.pi * 2 * freq, 100)
+    xx, yy = np.meshgrid(x, x)
+    xx = np.sin(xx)
+    yy = np.sin(yy)
+
+    return (xx + yy) * 127 + 127
+
+
+def ex14(img1, mask):
+    return img1 * mask
+
+
 if __name__ == '__main__':
     img, _ = ex4(False)
-    img_rect = ex7(img)
-
-    # _, (ax1, ax2) = plt.subplots(1, 2)
-    # ax1.imshow(img, **IMSHOW_ARGS)
-    # ax2.imshow(ex5(img, 100, 1.2), **IMSHOW_ARGS)
-    # ax1.imshow(img_rect, **IMSHOW_ARGS)
-    # ax2.imshow(ex8(img_rect), **IMSHOW_ARGS)
-    plt.imshow(ex9(), **IMSHOW_ARGS)
+    _, axes = plt.subplots(1, 2)
+    # axes[1].imshow(ex5(img,100,1.2), **IMSHOW_ARGS)
+    # img_with_rect = ex7(img)
+    mask = ex13()
+    axes[0].imshow(mask, **IMSHOW_ARGS)
+    axes[1].imshow(ex14(img, mask))
     plt.show()
